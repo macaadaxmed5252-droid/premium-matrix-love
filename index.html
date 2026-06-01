@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Matrix Love</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
+
+        body {
+            background-color: #000;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Glassmorphism Effect for text */
+        .glass-text {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(244, 63, 94, 0.2);
+        }
+
+        /* Matrix Heart Design */
+        .heart-wrapper {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: heartBeat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        .heart-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #f43f5e;
+            transform: rotate(-45deg);
+            box-shadow: 0 0 60px #f43f5e;
+        }
+
+        .heart-bg::before, .heart-bg::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #f43f5e;
+            border-radius: 50%;
+        }
+
+        .heart-bg::before { top: -50%; left: 0; }
+        .heart-bg::after { left: 50%; top: 0; }
+
+        .heart-content {
+            z-index: 20;
+            color: white;
+            font-weight: 900;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            font-size: 1.2rem;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.15); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.5); filter: blur(10px); }
+            to { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center h-screen">
+
+    <canvas id="matrixCanvas" class="fixed inset-0"></canvas>
+    
+    <div class="relative z-10 flex flex-col items-center justify-center">
+        
+        <div id="countdown" class="text-[12rem] font-black text-white drop-shadow-[0_0_35px_#f43f5e]"></div>
+
+        <div id="message-container" class="hidden">
+            <h1 id="dynamic-text" class="text-8xl font-black text-white glass-text tracking-widest uppercase italic"></h1>
+            
+            <div id="heart-container" class="hidden mt-10">
+                <div class="heart-wrapper">
+                    <div class="heart-bg"></div>
+                    <div class="heart-content">
+                        I LOVE YOU<br>SAYANG ❤️
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+
+        // Xarfaha lagu qorayo Matrix-ka
+        const matrixChars = "01LOVE❤ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const fontSize = 18;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+            // "Trail" madow oo yar si ay u iftiimaan xarfaha
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = `bold ${fontSize}px monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                
+                // Si tartiib ah u bedbedel midabka si uu glow u yeesho
+                ctx.fillStyle = "#f43f5e"; 
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = "#f43f5e";
+
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+            ctx.shadowBlur = 0; // Reset glow for performance
+        }
+
+        // Logic-ka animation-ka
+        const countdownEl = document.getElementById('countdown');
+        const msgContainer = document.getElementById('message-container');
+        const dynamicText = document.getElementById('dynamic-text');
+        const heartContainer = document.getElementById('heart-container');
+
+        let count = 3;
+        const words = ["You", "Are", "My", "Everything"];
+        let wordIndex = 0;
+
+        const timer = setInterval(() => {
+            if (count > 0) {
+                countdownEl.innerText = count;
+                countdownEl.classList.add('fade-in');
+                setTimeout(() => countdownEl.classList.remove('fade-in'), 900);
+                count--;
+            } else {
+                clearInterval(timer);
+                countdownEl.style.display = 'none';
+                msgContainer.classList.remove('hidden');
+                showWords();
+            }
+        }, 1000);
+
+        function showWords() {
+            if (wordIndex < words.length) {
+                dynamicText.innerText = words[wordIndex];
+                dynamicText.classList.remove('fade-in');
+                void dynamicText.offsetWidth; // Trigger reflow
+                dynamicText.classList.add('fade-in');
+                
+                wordIndex++;
+                setTimeout(showWords, 1100);
+            } else {
+                dynamicText.classList.add('hidden');
+                heartContainer.classList.remove('hidden');
+                heartContainer.classList.add('fade-in');
+            }
+        }
+
+        // Run the Matrix
+        setInterval(drawMatrix, 40);
+    </script>
+</body>
+</html>
