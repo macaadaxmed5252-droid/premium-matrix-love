@@ -28,4 +28,4 @@ Premium Matrix Love waa bog loogu talagalay soo bandhigista animation jaceyl oo 
 
 1. **Soo degso (Clone) mashruucan:**
 ```bash
-   git clone 
+   git clone [https://github.com/macaadaxmed5252-droid/3d-perspective-card.git](https://github.com/macaadaxmed5252-droid/3d-perspective-card.git)
