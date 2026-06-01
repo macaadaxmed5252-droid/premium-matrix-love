@@ -28,4 +28,4 @@ Premium Matrix Love waa bog loogu talagalay soo bandhigista animation jaceyl oo 
 
 1. **Soo degso (Clone) mashruucan:**
 ```bash
-   git clone [https://github.com/YOUR-USERNAME/premium-matrix-love.git](https://github.com/YOUR-USERNAME/premium-matrix-love.git)
+   git clone 
